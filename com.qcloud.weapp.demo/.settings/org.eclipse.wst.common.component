@@ -2,6 +2,9 @@
     <wb-module deploy-name="com.qcloud.weapp.demo">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="com.qcloud.weapp.sdk.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/com.qcloud.weapp.sdk/com.qcloud.weapp.sdk">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="com.qcloud.weapp.demo"/>
         <property name="java-output-path" value="/com.qcloud.weapp.demo/build/classes"/>
     </wb-module>

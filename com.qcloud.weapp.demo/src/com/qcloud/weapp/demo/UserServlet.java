@@ -12,10 +12,13 @@ import org.json.JSONObject;
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.LoginServiceException;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+/**
+ * Servlet implementation class UserServlet
+ */
+@WebServlet("/user")
+public class UserServlet extends HttpServlet {
        
-	private static final long serialVersionUID = 6585319986631669934L;
+	private static final long serialVersionUID = 6579706670441711811L;
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -23,9 +26,12 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LoginService service = new LoginService(request, response);
 		try {
-			JSONObject userInfo = service.login();
-			System.out.println("========= LoginSuccess, UserInfo: ==========");
+			JSONObject userInfo = service.checkLogin();
+			System.out.println("========= CheckLoginSuccess, UserInfo: ==========");
 			System.out.println(userInfo.toString());
+			response.setContentType("application/json");
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(userInfo.toString());
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (LoginServiceException e) {
@@ -37,6 +43,7 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
