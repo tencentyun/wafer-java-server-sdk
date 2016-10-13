@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
 
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.LoginServiceException;
+import com.qcloud.weapp.authorization.UserInfo;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -20,10 +20,10 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LoginService service = new LoginService(request, response);
 		try {
-			JSONObject userInfo = service.login();
+			UserInfo userInfo = service.login();
 			System.out.println("========= LoginSuccess, UserInfo: ==========");
 			System.out.println(userInfo.toString());
 		} catch (IllegalArgumentException e) {
@@ -31,13 +31,6 @@ public class LoginServlet extends HttpServlet {
 		} catch (LoginServiceException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 }

@@ -1,23 +1,20 @@
 package com.qcloud.weapp.authorization;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginService {
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+import com.qcloud.weapp.ServiceBase;
+
+public class LoginService extends ServiceBase {
 	
 	public LoginService(HttpServletRequest request, HttpServletResponse response) {
-		this.request = request;
-		this.response = response;
+		super(request, response);
 	}
 	
-	public JSONObject login() throws IllegalArgumentException, LoginServiceException {
+	public UserInfo login() throws IllegalArgumentException, LoginServiceException {
 		String code = getHeader(Constants.WX_HEADER_CODE);
 		String encryptData = getHeader(Constants.WX_HEADER_ENCRYPT_DATA);
 		
@@ -50,10 +47,10 @@ public class LoginService {
 			e.printStackTrace();
 		}
 		
-		return userInfo;
+		return UserInfo.BuildFromJson(userInfo);
 	}
 	
-	public JSONObject checkLogin() throws IllegalArgumentException, LoginServiceException {
+	public UserInfo check() throws IllegalArgumentException, LoginServiceException {
 		String id = getHeader(Constants.WX_HEADER_ID);
 		String skey = getHeader(Constants.WX_HEADER_SKEY);
 		
@@ -72,7 +69,7 @@ public class LoginService {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return userInfo;
+		return UserInfo.BuildFromJson(userInfo);
 	}
 	
 	private String getHeader(String key) throws IllegalArgumentException {
@@ -84,39 +81,5 @@ public class LoginService {
 		}
 		return value;
 	}
-	
-	private void writeJson(JSONObject json) {
-		try {
-			this.response.setContentType("application/json");
-			this.response.setCharacterEncoding("utf-8");
-			this.response.getWriter().print(json.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private JSONObject prepareResponseJson() {
-		JSONObject json = new JSONObject();
-		try {
-			json.put(Constants.WX_SESSION_MAGIC_ID, 1);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
-	
-	private JSONObject getJsonForError(Exception error) {
-		JSONObject json = prepareResponseJson();
-		try {
-			if (error instanceof LoginServiceException) {
-				json.put("error", ((LoginServiceException) error).getType());
-			}
-			json.put("message", error.getMessage());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
-	
 	
 }
