@@ -1,4 +1,4 @@
-package com.qcloud.weapp.demo;
+package com.qcloud.weapp.demo.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.LoginServiceException;
 import com.qcloud.weapp.authorization.UserInfo;
@@ -29,6 +29,8 @@ public class LoginServlet extends HttpServlet {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (LoginServiceException e) {
+			e.printStackTrace();
+		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
 	}

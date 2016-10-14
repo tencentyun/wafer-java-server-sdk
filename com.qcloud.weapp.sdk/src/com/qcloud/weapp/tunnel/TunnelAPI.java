@@ -1,14 +1,20 @@
 package com.qcloud.weapp.tunnel;
 
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.qcloud.weapp.ConfigurationException;
+import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.HttpRequest;
+import com.qcloud.weapp.Logger;
 
 public class TunnelAPI {
-	private String getAPIEndpoint() {
-		return "http://ws.qcloud.com";
+	private String getTunnelServerUrl() throws ConfigurationException {
+		return ConfigurationManager.getCurrentConfiguration().getTunnelServerUrl();
 	}
 	
 	public Tunnel requestConnect(String skey, String receiveUrl) throws Exception {
@@ -30,7 +36,7 @@ public class TunnelAPI {
 		return tunnel;
 	}
 	
-	public boolean emitMessage(Tunnel[] tunnels, String messageType, String messageContent) {
+	public boolean emitMessage(Tunnel[] tunnels, String messageType, JSONObject messageContent) {
 		String[] tunnelIds = new String[tunnels.length];
 		Integer i = 0;
 		for (Tunnel tunnel : tunnels) {
@@ -39,7 +45,7 @@ public class TunnelAPI {
 		return emitMessage(tunnelIds, messageType, messageContent);
 	}
 	
-	public boolean emitMessage(String[] tunnelIds, String messageType, String messageContent) {
+	public boolean emitMessage(String[] tunnelIds, String messageType, JSONObject messageContent) {
 		JSONObject packet = new JSONObject();
 		try {
 			packet.put("type", messageType);
@@ -61,12 +67,13 @@ public class TunnelAPI {
 			packet.put("tunnelIds", tunnelIds);
 			packet.put("content", packetContent == null ? null : packetContent.toString());
 			data.put(packet);
+			Logger.log("data: " + data.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		try {
-			JSONObject result = request("/ws/push", data);
-			return result.getInt("code") == 0;
+			request("/ws/push", data);
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -79,7 +86,7 @@ public class TunnelAPI {
 			throw new Exception("数据只能是 JSONObject 或者 JSONArray 类型");
 		}
 		
-		String url = getAPIEndpoint() + path;
+		String url = getTunnelServerUrl() + path;
 		String responseContent;
 		
 		try {
@@ -104,7 +111,7 @@ public class TunnelAPI {
             		String.format("信道服务调用失败：#%d - %s", body.get("code"), body.get("message"))
         		);
 			}
-			return body.getJSONObject("data");
+			return body.has("data") ? body.getJSONObject("data") : null;
 		} catch(JSONException e) {
 			throw new Exception("信道服务器响应格式错误，无法解析 JSON 字符串", e);
 		}
@@ -119,6 +126,7 @@ public class TunnelAPI {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		Logger.log("body: " + body.toString());
 		return body.toString();
 	}
 	

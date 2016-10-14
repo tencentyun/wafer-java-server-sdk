@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.qcloud.weapp.ConfigurationException;
+import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.ServiceBase;
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.UserInfo;
@@ -26,8 +29,9 @@ public class TunnelService extends ServiceBase {
 
 	/**
 	 * 处理 WebSocket 信道请求
+	 * @throws ConfigurationException 
 	 */
-	public void handle(TunnelHandler handler, TunnelHandleOptions options) {
+	public void handle(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
 		if (request.getMethod().toUpperCase() == "GET") {
 			handleGet(handler, options);
 		}
@@ -41,10 +45,11 @@ public class TunnelService extends ServiceBase {
 	 * 
 	 * GET 请求表示客户端请求进行信道连接，此时会向 SDK 申请信道连接地址，并且返回给客户端
 	 * 如果配置指定了要求登陆，还会调用登陆服务来校验登陆态并获得用户信息
+	 * @throws ConfigurationException 
 	 * 
 	 * @throws Exception
 	 */
-	private void handleGet(TunnelHandler handler, TunnelHandleOptions options) {
+	private void handleGet(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
 		Tunnel tunnel = null;
 		UserInfo user = null;
 
@@ -77,10 +82,10 @@ public class TunnelService extends ServiceBase {
 		handler.OnTunnelRequest(tunnel, user);
 	}
 
-	private String buildReceiveUrl() {
+	private String buildReceiveUrl() throws ConfigurationException {
 		URI tunnelServerUri = URI.create(tunnelServerUrl);
 		String schema = tunnelServerUri.getScheme();
-		String host = "java-demo.qcloud.la";
+		String host = ConfigurationManager.getCurrentConfiguration().getServerHost();
 		String path = request.getRequestURI();
 		return schema + "://" + host + path;
 	}
@@ -92,12 +97,11 @@ public class TunnelService extends ServiceBase {
 		String packetContent = null;
 
 		try {
-			BufferedReader requestReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			StringBuffer requestBodyBuffer = new StringBuffer();
+			BufferedReader requestReader = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
+			requestBody = "";
 			for (String line; (line = requestReader.readLine()) != null;) {
-				requestBodyBuffer.append(line);
+				requestBody += line;
 			}
-			requestBody = requestBodyBuffer.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 			writeJson(getJsonForError(e));
@@ -135,11 +139,13 @@ public class TunnelService extends ServiceBase {
 		}
 
 		Tunnel tunnel = Tunnel.getById(tunnelId);
-		if (packetType == "connect") {
+		if (packetType.equals("connect")) {
 			handler.OnTunnelConnect(tunnel);
-		} else if (packetType == "message") {
+		}
+		else if (packetType.equals("message")) {
 			handler.OnTunnelMessage(tunnel, new TunnelMessage(packetContent));
-		} else if (packetType == "close") {
+		}
+		else if (packetType.equals("close")) {
 			handler.OnTunnelClose(tunnel);
 		}
 	}

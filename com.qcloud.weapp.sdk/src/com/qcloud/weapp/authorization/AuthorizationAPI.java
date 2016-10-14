@@ -7,32 +7,36 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.qcloud.weapp.ConfigurationException;
+import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.HttpRequest;
 
 public class AuthorizationAPI {
-	
-	private static String APIEndpoint = "http://mina.auth.com:9447/";
+		
+	private String getAPIUrl() throws ConfigurationException {
+		return ConfigurationManager.getCurrentConfiguration().getAuthServerUrl();
+	}
 
-	public JSONObject login(String code, String encryptData) throws AuthorizationAPIException {
+	public JSONObject login(String code, String encryptData) throws AuthorizationAPIException, ConfigurationException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("code", code);
 		params.put("encrypt_data", encryptData);
 		return request("qcloud.cam.id_skey", params);
 	}
 	
-	public JSONObject checkLogin(String id, String skey) throws AuthorizationAPIException {
+	public JSONObject checkLogin(String id, String skey) throws AuthorizationAPIException, ConfigurationException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 		params.put("skey", skey);
 		return request("qcloud.cam.auth", params);
 	}
 
-	public JSONObject request(String apiName, Map<String, Object> apiParams) throws AuthorizationAPIException {
+	public JSONObject request(String apiName, Map<String, Object> apiParams) throws AuthorizationAPIException, ConfigurationException {
 		String requestBody = null;
 		String responseBody = null;
 
 		try {
-			HttpRequest request = new HttpRequest(APIEndpoint);
+			HttpRequest request = new HttpRequest(getAPIUrl());
 			
 			requestBody = buildRequestBody(apiName, apiParams);
 			System.out.println("==============Auth Request=============");
@@ -42,7 +46,7 @@ public class AuthorizationAPI {
 			System.out.println("==============Auth Response=============");
 			System.out.println(requestBody);
 		} catch (IOException e) {
-			throw new AuthorizationAPIException("连接鉴权服务错误，请检查网络状态");
+			throw new AuthorizationAPIException("连接鉴权服务错误，请检查网络状态" + getAPIUrl() + e.getMessage());
 		}
 
 		JSONObject body = null;

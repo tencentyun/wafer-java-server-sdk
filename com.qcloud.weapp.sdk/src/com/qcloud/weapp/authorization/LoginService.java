@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ServiceBase;
 
 public class LoginService extends ServiceBase {
@@ -14,7 +15,7 @@ public class LoginService extends ServiceBase {
 		super(request, response);
 	}
 	
-	public UserInfo login() throws IllegalArgumentException, LoginServiceException {
+	public UserInfo login() throws IllegalArgumentException, LoginServiceException, ConfigurationException {
 		String code = getHeader(Constants.WX_HEADER_CODE);
 		String encryptData = getHeader(Constants.WX_HEADER_ENCRYPT_DATA);
 		
@@ -50,7 +51,7 @@ public class LoginService extends ServiceBase {
 		return UserInfo.BuildFromJson(userInfo);
 	}
 	
-	public UserInfo check() throws IllegalArgumentException, LoginServiceException {
+	public UserInfo check() throws IllegalArgumentException, LoginServiceException, ConfigurationException {
 		String id = getHeader(Constants.WX_HEADER_ID);
 		String skey = getHeader(Constants.WX_HEADER_SKEY);
 		

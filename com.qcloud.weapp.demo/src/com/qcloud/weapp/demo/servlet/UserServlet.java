@@ -1,4 +1,4 @@
-package com.qcloud.weapp.demo;
+package com.qcloud.weapp.demo.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.authorization.LoginService;
 import com.qcloud.weapp.authorization.LoginServiceException;
 import com.qcloud.weapp.authorization.UserInfo;
@@ -46,6 +47,8 @@ public class UserServlet extends HttpServlet {
 		} catch (LoginServiceException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
