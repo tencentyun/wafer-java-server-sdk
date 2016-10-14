@@ -1,8 +1,5 @@
 package com.qcloud.weapp.tunnel;
 
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
