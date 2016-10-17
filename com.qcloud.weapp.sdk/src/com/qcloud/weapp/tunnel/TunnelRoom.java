@@ -9,6 +9,9 @@ public class TunnelRoom {
 	private ArrayList<Tunnel> tunnels;
 	
 	public TunnelRoom(ArrayList<Tunnel> tunnels) {
+		if (tunnels == null) {
+			tunnels = new ArrayList<Tunnel>();
+		}
 		this.tunnels = tunnels;
 	}
 	
@@ -28,7 +31,7 @@ public class TunnelRoom {
 		tunnels.removeIf(new Predicate<Tunnel>() {
 			@Override
 			public boolean test(Tunnel t) {
-				return t.getTunnelId() == tunnelId;
+				return t.getTunnelId().equals(tunnelId);
 			}
 		});
 	}
@@ -37,11 +40,8 @@ public class TunnelRoom {
 		return tunnels.size();
 	}
 	
-	public boolean broadcast(String messageType, JSONObject messageContent) {
-		if (tunnels != null) {
-			TunnelAPI api = new TunnelAPI();
-			return api.emitMessage(tunnels.toArray(new Tunnel[] {}), messageType, messageContent);
-		}
-		return true;
+	public EmitResult broadcast(String messageType, JSONObject messageContent) throws EmitError {
+		TunnelAPI api = new TunnelAPI();
+		return api.emitMessage(tunnels.toArray(new Tunnel[] {}), messageType, messageContent);
 	}
 }

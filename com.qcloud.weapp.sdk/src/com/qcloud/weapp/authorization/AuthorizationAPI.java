@@ -50,7 +50,7 @@ public class AuthorizationAPI {
 		}
 
 		JSONObject body = null;
-		Integer returnCode = null;
+		int returnCode = 0;
 		String returnMessage = null;
 		
 		try {
@@ -62,7 +62,9 @@ public class AuthorizationAPI {
 		}
 
 		if (returnCode != 0) {
-			throw new AuthorizationAPIException(String.format("调用鉴权服务失败：#%d - %s", returnCode, returnMessage));
+			AuthorizationAPIException error = new AuthorizationAPIException(String.format("调用鉴权服务失败：#%d - %s", returnCode, returnMessage));
+			error.setCode(returnCode);
+			throw error;
 		}
 		JSONObject returnData = null;
 		try {

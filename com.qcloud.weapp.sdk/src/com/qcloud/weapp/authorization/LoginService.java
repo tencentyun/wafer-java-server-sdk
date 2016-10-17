@@ -60,7 +60,11 @@ public class LoginService extends ServiceBase {
 		try {
 			checkLoginResult = api.checkLogin(id, skey);
 		} catch (AuthorizationAPIException apiError) {
-			LoginServiceException error = new LoginServiceException(Constants.ERR_CHECK_LOGIN_FAILED, apiError.getMessage(), apiError);
+			String errorType = Constants.ERR_CHECK_LOGIN_FAILED;
+			if (apiError.getCode() == 60011 || apiError.getCode() == 60012) {
+				errorType = Constants.ERR_INVALID_SESSION;
+			}
+			LoginServiceException error = new LoginServiceException(errorType, apiError.getMessage(), apiError);
 			writeJson(getJsonForError(error));
 			throw error;
 		}

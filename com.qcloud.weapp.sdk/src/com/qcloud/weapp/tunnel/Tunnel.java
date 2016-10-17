@@ -31,12 +31,12 @@ public class Tunnel {
 		return new Tunnel(tunnelId);
 	}
 	
-	public boolean emit(String messageType, JSONObject messageContent) {
+	public EmitResult emit(String messageType, JSONObject messageContent) throws EmitError {
 		TunnelAPI api = new TunnelAPI();
 		return api.emitMessage(new String[]{ tunnelId }, messageType, messageContent);
 	}
 	
-	public boolean close() {
+	public EmitResult close() throws EmitError {
 		TunnelAPI api = new TunnelAPI();
 		return api.emitPacket(new String[]{ tunnelId }, "close", null);
 	}

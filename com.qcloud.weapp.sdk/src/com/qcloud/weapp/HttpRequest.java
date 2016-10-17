@@ -50,7 +50,6 @@ public class HttpRequest {
 		
 		// send the request
 		OutputStreamWriter requestWriter = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
-		Logger.log("send request: " + body);
 		requestWriter.write(body);
 		requestWriter.flush();
 

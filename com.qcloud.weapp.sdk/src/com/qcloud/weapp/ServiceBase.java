@@ -42,9 +42,10 @@ public class ServiceBase {
 		return json;
 	}
 	
-	protected JSONObject getJsonForError(Exception error) {
+	protected JSONObject getJsonForError(Exception error, int errorCode) {
 		JSONObject json = prepareResponseJson();
 		try {
+			json.put("code", errorCode);
 			if (error instanceof LoginServiceException) {
 				json.put("error", ((LoginServiceException) error).getType());
 			}
@@ -53,6 +54,10 @@ public class ServiceBase {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	protected JSONObject getJsonForError(Exception error) {
+		return getJsonForError(error, -1);
 	}
 	
 	

@@ -13,10 +13,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.qcloud.weapp.ConfigurationException;
+import com.qcloud.weapp.Logger;
 import com.qcloud.weapp.authorization.UserInfo;
+import com.qcloud.weapp.tunnel.EmitError;
+import com.qcloud.weapp.tunnel.EmitResult;
 import com.qcloud.weapp.tunnel.Tunnel;
 import com.qcloud.weapp.tunnel.TunnelHandleOptions;
 import com.qcloud.weapp.tunnel.TunnelHandler;
+import com.qcloud.weapp.tunnel.TunnelInvalidInfo;
 import com.qcloud.weapp.tunnel.TunnelMessage;
 import com.qcloud.weapp.tunnel.TunnelRoom;
 import com.qcloud.weapp.tunnel.TunnelService;
@@ -26,25 +30,27 @@ import com.qcloud.weapp.tunnel.TunnelService;
  */
 @WebServlet("/tunnel")
 public class TunnelServlet extends HttpServlet {
-    private static final long serialVersionUID = -6490955903032763981L;
+	private static final long serialVersionUID = -6490955903032763981L;
 
-    private static HashMap<String, UserInfo> userMap = new HashMap<String, UserInfo>();
-    private static TunnelRoom room = new TunnelRoom();
-    		
+	private static HashMap<String, UserInfo> userMap = new HashMap<String, UserInfo>();
+	private static TunnelRoom room = new TunnelRoom();
+
 	/**
-	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		TunnelService tunnelService = new TunnelService(request, response);
 		TunnelHandleOptions options = new TunnelHandleOptions();
-		
+
 		options.setCheckLogin(true);
-		
+
 		try {
 			tunnelService.handle(new TunnelHandler() {
-				
+
 				@Override
-				public void OnTunnelRequest(Tunnel tunnel, UserInfo userInfo) {
+				public void onTunnelRequest(Tunnel tunnel, UserInfo userInfo) {
 					if (tunnel.getTunnelId() == "test") {
 						userInfo = new UserInfo();
 					}
@@ -53,9 +59,9 @@ public class TunnelServlet extends HttpServlet {
 					}
 					System.out.println(String.format("Tunnel Connected: %s", tunnel.getTunnelId()));
 				}
-				
+
 				@Override
-				public void OnTunnelConnect(Tunnel tunnel) {
+				public void onTunnelConnect(Tunnel tunnel) {
 					if (userMap.containsKey(tunnel.getTunnelId())) {
 						room.addTunnel(tunnel);
 						JSONObject peopleMessage = new JSONObject();
@@ -65,14 +71,14 @@ public class TunnelServlet extends HttpServlet {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						room.broadcast("people", peopleMessage);
+						broadcast("people", peopleMessage);
 					} else {
-						tunnel.close();
+						closeTunnel(tunnel);
 					}
 				}
-				
+
 				@Override
-				public void OnTunnelMessage(Tunnel tunnel, TunnelMessage message) {
+				public void onTunnelMessage(Tunnel tunnel, TunnelMessage message) {
 					if (message.getType().equals("speak") && userMap.containsKey(tunnel.getTunnelId())) {
 						JSONObject speakMessage = new JSONObject();
 						try {
@@ -81,17 +87,19 @@ public class TunnelServlet extends HttpServlet {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						room.broadcast("speak", speakMessage);
+						broadcast("speak", speakMessage);
 					} else {
-						tunnel.close();
+						closeTunnel(tunnel);
 					}
-					
+
 				}
-				
+
 				@Override
-				public void OnTunnelClose(Tunnel tunnel) {
+				public void onTunnelClose(Tunnel tunnel) {
+					Logger.log("onTunnelClose()");
 					UserInfo leaveUser = null;
 					if (userMap.containsKey(tunnel.getTunnelId())) {
+						Logger.log("contains()");
 						leaveUser = userMap.get(tunnel.getTunnelId());
 						userMap.remove(tunnel.getTunnelId());
 					}
@@ -101,9 +109,31 @@ public class TunnelServlet extends HttpServlet {
 						peopleMessage.put("total", room.getTunnelCount());
 						peopleMessage.put("leave", new JSONObject(leaveUser));
 					} catch (JSONException e) {
+						Logger.log("error: " + e.getMessage());
 						e.printStackTrace();
 					}
-					room.broadcast("people", peopleMessage);
+					broadcast("people", peopleMessage);
+				}
+
+				private void closeTunnel(Tunnel tunnel) {
+					try {
+						tunnel.close();
+					} catch (EmitError e) {
+						e.printStackTrace();
+					}
+				}
+
+				private void broadcast(String messageType, JSONObject messageContent) {
+					try {
+						EmitResult result = room.broadcast(messageType, messageContent);
+						for (TunnelInvalidInfo invalidInfo : result.getTunnelInvalidInfos()) {
+							onTunnelClose(Tunnel.getById(invalidInfo.getTunnelId()));
+						}
+					} catch (EmitError e) {
+						Logger.log("broadcast error: " + e.getMessage());
+						// 如果消息发送发生异常，这里可以进行错误处理或者重试的逻辑
+						e.printStackTrace();
+					}
 				}
 			}, options);
 		} catch (ConfigurationException e) {
