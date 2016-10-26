@@ -18,14 +18,14 @@ public class UserInfo {
 		
 		UserInfo userInfo = new UserInfo();
 		try {
-			userInfo.openId = (String) json.get("openId");
-			userInfo.nickName = (String) json.get("nickName");
-			userInfo.avatarUrl = (String) json.get("avatarUrl");
-			userInfo.gender = (Integer) json.get("gender");
-			userInfo.language = (String) json.get("language");
-			userInfo.city = (String) json.get("city");
-			userInfo.province = (String) json.get("province");
-			userInfo.country = (String) json.get("country");
+			if (json.has("openId")) userInfo.openId = json.getString("openId");
+			if (json.has("nickName")) userInfo.nickName = json.getString("nickName");
+			if (json.has("avatarUrl")) userInfo.avatarUrl = json.getString("avatarUrl");
+			if (json.has("gender")) userInfo.gender = json.getInt("gender");
+			if (json.has("language")) userInfo.language = json.getString("language");
+			if (json.has("city")) userInfo.city = json.getString("city");
+			if (json.has("province")) userInfo.province = json.getString("province");
+			if (json.has("country")) userInfo.country = json.getString("country");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
