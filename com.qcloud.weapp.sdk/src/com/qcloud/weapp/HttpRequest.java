@@ -12,6 +12,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HttpRequest {
+	
+	public interface ConnectionProvider {
+		HttpURLConnection getConnection(String url, Proxy proxy) throws IOException;
+	}
+	
+	private static ConnectionProvider connectionProvider = new ConnectionProvider() {
+		
+		@Override
+		public HttpURLConnection getConnection(String url, Proxy proxy) throws IOException {
+			if (proxy == null) {
+				return (HttpURLConnection) new URL(url).openConnection();
+			} else {
+				return (HttpURLConnection) new URL(url).openConnection(proxy);
+			}
+		}
+	};
+	
+	public static void setUrlProvider(ConnectionProvider provider) {
+		connectionProvider = provider;
+	}
+
+	public static ConnectionProvider getUrlProvider() {
+		return connectionProvider;
+	}
+	
 	private String url;
 	
 	public HttpRequest(String url) {
@@ -19,9 +44,7 @@ public class HttpRequest {
 	}
 	
 	public String post(String body) throws IOException {
-		URL url = new URL(this.url);
 		HttpURLConnection connection;
-		
 		Proxy proxy = null;
 		try {
 			String proxyString = ConfigurationManager.getCurrentConfiguration().getNetworkProxy();
@@ -37,13 +60,19 @@ public class HttpRequest {
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
+
+		connection = connectionProvider.getConnection(url, proxy);
 		
-		if (proxy != null) {
-			connection = (HttpURLConnection) url.openConnection(proxy);
-		} else {
-			connection = (HttpURLConnection) url.openConnection();
+		int networkTimeout = 60000;
+		
+		try {
+			networkTimeout = 1000 * ConfigurationManager.getCurrentConfiguration().getNetworkTimeout();
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
 		}
 		
+		connection.setConnectTimeout(networkTimeout);
+		connection.setReadTimeout(networkTimeout);
 		connection.setDoOutput(true);
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");

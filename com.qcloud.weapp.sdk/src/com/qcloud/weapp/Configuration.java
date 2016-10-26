@@ -6,6 +6,7 @@ public class Configuration {
 	private String tunnelServerUrl;
 	private String tunnelSignatureKey;
 	private String networkProxy;
+	private Integer networkTimeout;
 	
 	public String getServerHost() {
 		return serverHost;
@@ -36,5 +37,11 @@ public class Configuration {
 	}
 	public void setNetworkProxy(String networkProxy) {
 		this.networkProxy = networkProxy;
+	}
+	public Integer getNetworkTimeout() {
+		return networkTimeout == null ? 30 : networkTimeout;
+	}
+	public void setNetworkTimeout(Integer networkTimeout) {
+		this.networkTimeout = networkTimeout;
 	}
 }
