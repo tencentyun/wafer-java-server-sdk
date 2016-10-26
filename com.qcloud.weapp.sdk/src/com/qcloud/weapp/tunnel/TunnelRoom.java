@@ -3,8 +3,6 @@ package com.qcloud.weapp.tunnel;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-import org.json.JSONObject;
-
 public class TunnelRoom {
 	private ArrayList<Tunnel> tunnels;
 	
@@ -36,11 +34,11 @@ public class TunnelRoom {
 		});
 	}
 	
-	public Integer getTunnelCount() {
+	public int getTunnelCount() {
 		return tunnels.size();
 	}
 	
-	public EmitResult broadcast(String messageType, JSONObject messageContent) throws EmitError {
+	public EmitResult broadcast(String messageType, Object messageContent) throws EmitError {
 		TunnelAPI api = new TunnelAPI();
 		return api.emitMessage(tunnels.toArray(new Tunnel[] {}), messageType, messageContent);
 	}

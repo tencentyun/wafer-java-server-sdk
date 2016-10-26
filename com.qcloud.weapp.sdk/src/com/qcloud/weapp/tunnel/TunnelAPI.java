@@ -35,7 +35,7 @@ public class TunnelAPI {
 		return tunnel;
 	}
 
-	public EmitResult emitMessage(Tunnel[] tunnels, String messageType, JSONObject messageContent) throws EmitError {
+	public EmitResult emitMessage(Tunnel[] tunnels, String messageType, Object messageContent) throws EmitError {
 		String[] tunnelIds = new String[tunnels.length];
 		Integer i = 0;
 		for (Tunnel tunnel : tunnels) {
@@ -44,7 +44,7 @@ public class TunnelAPI {
 		return emitMessage(tunnelIds, messageType, messageContent);
 	}
 
-	public EmitResult emitMessage(String[] tunnelIds, String messageType, JSONObject messageContent) throws EmitError {
+	public EmitResult emitMessage(String[] tunnelIds, String messageType, Object messageContent) throws EmitError {
 		JSONObject packet = new JSONObject();
 		try {
 			packet.put("type", messageType);
@@ -72,7 +72,7 @@ public class TunnelAPI {
 		}
 		try {
 			JSONObject emitReturn = request("/ws/push", data, false);
-			JSONArray invalidTunnelIds = emitReturn.getJSONArray("invalidTunnelIds");
+			JSONArray invalidTunnelIds = emitReturn != null && emitReturn.has("invalidTunnelIds") ? emitReturn.getJSONArray("invalidTunnelIds") : new JSONArray();
 			ArrayList<TunnelInvalidInfo> infos = new ArrayList<TunnelInvalidInfo>();
 			for(int i = 0; i < invalidTunnelIds.length(); i++) {
 				TunnelInvalidInfo info = new TunnelInvalidInfo();

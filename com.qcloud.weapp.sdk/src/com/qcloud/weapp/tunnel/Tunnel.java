@@ -1,7 +1,5 @@
 package com.qcloud.weapp.tunnel;
 
-import org.json.JSONObject;
-
 public class Tunnel {
 
 	private String tunnelId;
@@ -31,7 +29,7 @@ public class Tunnel {
 		return new Tunnel(tunnelId);
 	}
 	
-	public EmitResult emit(String messageType, JSONObject messageContent) throws EmitError {
+	public EmitResult emit(String messageType, Object messageContent) throws EmitError {
 		TunnelAPI api = new TunnelAPI();
 		return api.emitMessage(new String[]{ tunnelId }, messageType, messageContent);
 	}

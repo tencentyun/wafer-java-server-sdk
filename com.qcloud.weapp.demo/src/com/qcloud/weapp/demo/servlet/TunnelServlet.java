@@ -82,7 +82,8 @@ public class TunnelServlet extends HttpServlet {
 					if (message.getType().equals("speak") && userMap.containsKey(tunnel.getTunnelId())) {
 						JSONObject speakMessage = new JSONObject();
 						try {
-							speakMessage.put("word", message.getContent().getString("word"));
+							JSONObject messageContent = (JSONObject) message.getContent();
+							speakMessage.put("word", messageContent.getString("word"));
 							speakMessage.put("who", new JSONObject(userMap.get(tunnel.getTunnelId())));
 						} catch (JSONException e) {
 							e.printStackTrace();
