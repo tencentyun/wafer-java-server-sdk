@@ -51,7 +51,7 @@ public class LoginService extends ServiceBase {
 		return UserInfo.BuildFromJson(userInfo);
 	}
 	
-	public UserInfo check() throws IllegalArgumentException, LoginServiceException, ConfigurationException {
+	public UserInfo check() throws LoginServiceException, ConfigurationException {
 		String id = getHeader(Constants.WX_HEADER_ID);
 		String skey = getHeader(Constants.WX_HEADER_SKEY);
 		
@@ -77,10 +77,10 @@ public class LoginService extends ServiceBase {
 		return UserInfo.BuildFromJson(userInfo);
 	}
 	
-	private String getHeader(String key) throws IllegalArgumentException {
+	private String getHeader(String key) throws LoginServiceException {
 		String value = request.getHeader(key);
 		if (value == null || value.isEmpty()) {
-			IllegalArgumentException error = new IllegalArgumentException(String.format("请求头不包含 %s，请配合客户端 SDK 使用", key));
+			LoginServiceException error = new LoginServiceException("INVALID_REQUEST", String.format("请求头不包含 %s，请配合客户端 SDK 使用", key));
 			writeJson(getJsonForError(error));
 			throw error;
 		}
