@@ -4,7 +4,7 @@ import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.Hash;
 
-public class TunnelClient {
+class TunnelClient {
 	private static String _id = null;
 	public static String getId() throws ConfigurationException {
 		if (_id == null) {
