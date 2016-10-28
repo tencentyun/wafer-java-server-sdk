@@ -18,3 +18,4 @@
 
 ## API
 
+请参考[线上 API 文档](https://tencentyun.github.io/weapp-java-server-sdk/api/)。
