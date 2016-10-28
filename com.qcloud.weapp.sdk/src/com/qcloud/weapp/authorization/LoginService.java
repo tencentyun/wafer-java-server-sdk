@@ -1,5 +1,7 @@
 package com.qcloud.weapp.authorization;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,14 +9,66 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.qcloud.weapp.ConfigurationException;
-import com.qcloud.weapp.ServiceBase;
 
-public class LoginService extends ServiceBase {
+/**
+ * 提供登录服务
+ * */
+public class LoginService {
+	private HttpServletRequest request;
+	private HttpServletResponse response;
 	
+	/**
+	 * 从 Servlet Request 和 Servlet Response 创建登录服务
+	 * @param request Servlet Request
+	 * @param response Servlet Response
+	 * */
 	public LoginService(HttpServletRequest request, HttpServletResponse response) {
-		super(request, response);
+		this.request = request;
+		this.response = response;
+	}
+
+	private void writeJson(JSONObject json) {
+		try {
+			this.response.setContentType("application/json");
+			this.response.setCharacterEncoding("utf-8");
+			this.response.getWriter().print(json.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	private JSONObject prepareResponseJson() {
+		JSONObject json = new JSONObject();
+		try {
+			json.put(Constants.WX_SESSION_MAGIC_ID, 1);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	private JSONObject getJsonForError(Exception error, int errorCode) {
+		JSONObject json = prepareResponseJson();
+		try {
+			json.put("code", errorCode);
+			if (error instanceof LoginServiceException) {
+				json.put("error", ((LoginServiceException) error).getType());
+			}
+			json.put("message", error.getMessage());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	private JSONObject getJsonForError(Exception error) {
+		return getJsonForError(error, -1);
+	}
+	
+	/**
+	 * 处理登录请求
+	 * @return 登录成功将返回用户信息
+	 * */
 	public UserInfo login() throws IllegalArgumentException, LoginServiceException, ConfigurationException {
 		String code = getHeader(Constants.WX_HEADER_CODE);
 		String encryptData = getHeader(Constants.WX_HEADER_ENCRYPT_DATA);
@@ -51,6 +105,10 @@ public class LoginService extends ServiceBase {
 		return UserInfo.BuildFromJson(userInfo);
 	}
 	
+	/**
+	 * 检查当前请求的会话状态
+	 * @return 如果包含可用会话，将会返回会话对应的用户信息
+	 * */
 	public UserInfo check() throws LoginServiceException, ConfigurationException {
 		String id = getHeader(Constants.WX_HEADER_ID);
 		String skey = getHeader(Constants.WX_HEADER_SKEY);

@@ -3,11 +3,14 @@ package com.qcloud.weapp.tunnel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 表示一个信道消息
+ * */
 public class TunnelMessage {
 	private String type;
 	private Object content;
 	
-	public TunnelMessage(String messageRaw) {
+	TunnelMessage(String messageRaw) {
 		try {
 			JSONObject resolved = new JSONObject(messageRaw);
 			this.type = resolved.getString("type");
@@ -17,16 +20,22 @@ public class TunnelMessage {
 			this.content = messageRaw;
 		}
 	}
+	/**
+	 * 获取信道消息的类型
+	 * */
 	public String getType() {
 		return type;
 	}
-	public void setType(String type) {
-		this.type = type;
-	}
+	/**
+	 * 获取信道消息的内容
+	 * */
 	public Object getContent() {
 		return content;
 	}
-	public void setContent(JSONObject content) {
+	void setType(String type) {
+		this.type = type;
+	}
+	void setContent(JSONObject content) {
 		this.content = content;
 	}
 }

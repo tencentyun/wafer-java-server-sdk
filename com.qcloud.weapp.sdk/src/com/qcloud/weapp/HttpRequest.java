@@ -11,6 +11,9 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 用于创建网络请求，SDK 内部使用
+ * */
 public class HttpRequest {
 	
 	public interface ConnectionProvider {

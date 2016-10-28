@@ -7,9 +7,16 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 配置管理，使用该类进行 SDK 配置
+ * */
 public class ConfigurationManager {
 	
 	private static Configuration currentConfiguration;
+	
+	/**
+	 * 获取当前的 SDK 配置
+	 * */
 	public static Configuration getCurrentConfiguration() throws ConfigurationException {
 		if (currentConfiguration == null) {
 			throw new ConfigurationException("SDK 还没有进行配置，请调用 ConfigurationManager.setup() 方法配置 SDK");
@@ -17,6 +24,12 @@ public class ConfigurationManager {
 		return currentConfiguration;
 	}
 	
+	/**
+	 * 使用指定的配置初始化 SDK
+	 * 
+	 * @param configuration 配置
+	 * @see <a target="_blank" href="https://github.com/tencentyun/weapp-solution/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE">服务端 SDK 配置</a>
+	 * */
 	public static void setup(Configuration configuration) throws ConfigurationException {
 		if (configuration == null) {
 			throw new ConfigurationException("配置不能为空");
@@ -28,6 +41,12 @@ public class ConfigurationManager {
 		currentConfiguration = configuration;
 	}
 	
+	/**
+	 * 从配置文件初始化 SDK
+	 * 
+	 * @param configFilePath 配置文件的路径
+	 * @see <a target="_blank" href="https://github.com/tencentyun/weapp-solution/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE">服务端 SDK 配置</a>
+	 * */
 	public static void setupFromFile(String configFilePath) throws JSONException, ConfigurationException {
 		JSONObject configs = new JSONObject(getConfigJson(configFilePath));
 		Configuration configuration = new Configuration();

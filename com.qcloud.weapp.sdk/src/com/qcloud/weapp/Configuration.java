@@ -3,9 +3,10 @@
  */
 package com.qcloud.weapp;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Configuration.
+ * 表示 SDK 配置
+ * @see com.qcloud.weapp.ConfigurationManager
+ * @see <a target="_blank" href="https://github.com/tencentyun/weapp-solution/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE">服务端 SDK 配置</a>
  */
 public class Configuration {
 	

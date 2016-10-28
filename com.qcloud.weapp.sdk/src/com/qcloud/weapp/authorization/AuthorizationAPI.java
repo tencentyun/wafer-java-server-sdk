@@ -11,7 +11,7 @@ import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.HttpRequest;
 
-public class AuthorizationAPI {
+class AuthorizationAPI {
 		
 	private String getAPIUrl() throws ConfigurationException {
 		return ConfigurationManager.getCurrentConfiguration().getAuthServerUrl();

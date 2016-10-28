@@ -10,9 +10,8 @@ import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.Hash;
 import com.qcloud.weapp.HttpRequest;
-import com.qcloud.weapp.Logger;
 
-public class TunnelAPI {
+class TunnelAPI {
 	private String getTunnelServerUrl() throws ConfigurationException {
 		return ConfigurationManager.getCurrentConfiguration().getTunnelServerUrl();
 	}
@@ -66,7 +65,6 @@ public class TunnelAPI {
 			packet.put("tunnelIds", tunnelIds);
 			packet.put("content", packetContent == null ? null : packetContent.toString());
 			data.put(packet);
-			Logger.log("data: " + data.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

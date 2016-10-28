@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.qcloud.weapp.ConfigurationException;
-import com.qcloud.weapp.Logger;
 import com.qcloud.weapp.authorization.UserInfo;
 import com.qcloud.weapp.tunnel.EmitError;
 import com.qcloud.weapp.tunnel.EmitResult;
@@ -97,10 +96,8 @@ public class TunnelServlet extends HttpServlet {
 
 				@Override
 				public void onTunnelClose(Tunnel tunnel) {
-					Logger.log("onTunnelClose()");
 					UserInfo leaveUser = null;
 					if (userMap.containsKey(tunnel.getTunnelId())) {
-						Logger.log("contains()");
 						leaveUser = userMap.get(tunnel.getTunnelId());
 						userMap.remove(tunnel.getTunnelId());
 					}
@@ -110,7 +107,6 @@ public class TunnelServlet extends HttpServlet {
 						peopleMessage.put("total", room.getTunnelCount());
 						peopleMessage.put("leave", new JSONObject(leaveUser));
 					} catch (JSONException e) {
-						Logger.log("error: " + e.getMessage());
 						e.printStackTrace();
 					}
 					broadcast("people", peopleMessage);
@@ -131,7 +127,6 @@ public class TunnelServlet extends HttpServlet {
 							onTunnelClose(Tunnel.getById(invalidInfo.getTunnelId()));
 						}
 					} catch (EmitError e) {
-						Logger.log("broadcast error: " + e.getMessage());
 						// 如果消息发送发生异常，这里可以进行错误处理或者重试的逻辑
 						e.printStackTrace();
 					}

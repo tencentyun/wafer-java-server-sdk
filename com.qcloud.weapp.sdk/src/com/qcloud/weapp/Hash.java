@@ -2,12 +2,21 @@ package com.qcloud.weapp;
 
 import java.security.MessageDigest;
 
+/**
+ * 工具类，用于计算哈希值（SDK 内部使用）
+ * */
 public class Hash {
 
+	/**
+	 * 计算字符串的 sha1 哈希值
+	 * */
 	public static String sha1(String str) {
 		return compute(str, "SHA-1");
 	}
 
+	/**
+	 * 计算字符串的 md5 哈希值
+	 * */
 	public static String md5(String str) {
 		return compute(str, "MD5");
 	}

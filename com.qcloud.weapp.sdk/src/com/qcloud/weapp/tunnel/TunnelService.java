@@ -15,21 +15,59 @@ import org.json.JSONObject;
 import com.qcloud.weapp.ConfigurationException;
 import com.qcloud.weapp.ConfigurationManager;
 import com.qcloud.weapp.Hash;
-import com.qcloud.weapp.Logger;
-import com.qcloud.weapp.ServiceBase;
 import com.qcloud.weapp.authorization.LoginService;
+import com.qcloud.weapp.authorization.LoginServiceException;
 import com.qcloud.weapp.authorization.UserInfo;
 
 
-public class TunnelService extends ServiceBase {
+/**
+ * 提供信道服务
+ * */
+public class TunnelService {
+	private HttpServletRequest request;
+	private HttpServletResponse response;
 
+	/**
+	 * 从 Servlet Request 和 Servlet Response 实例化一个信道服务
+	 * */
 	public TunnelService(HttpServletRequest request, HttpServletResponse response) {
-		super(request, response);
+		this.request = request;
+		this.response = response;
 	}
+
+	private void writeJson(JSONObject json) {
+		try {
+			this.response.setContentType("application/json");
+			this.response.setCharacterEncoding("utf-8");
+			this.response.getWriter().print(json.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private JSONObject getJsonForError(Exception error, int errorCode) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("code", errorCode);
+			if (error instanceof LoginServiceException) {
+				json.put("error", ((LoginServiceException) error).getType());
+			}
+			json.put("message", error.getMessage());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	private JSONObject getJsonForError(Exception error) {
+		return getJsonForError(error, -1);
+	}
+	
 
 	/**
 	 * 处理 WebSocket 信道请求
-	 * @throws ConfigurationException 
+	 * @param handler 指定信道处理器处理信道事件
+	 * @param options 指定信道服务的配置
 	 */
 	public void handle(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
 		if (request.getMethod().toUpperCase() == "GET") {
@@ -45,9 +83,6 @@ public class TunnelService extends ServiceBase {
 	 * 
 	 * GET 请求表示客户端请求进行信道连接，此时会向 SDK 申请信道连接地址，并且返回给客户端
 	 * 如果配置指定了要求登陆，还会调用登陆服务来校验登陆态并获得用户信息
-	 * @throws ConfigurationException 
-	 * 
-	 * @throws Exception
 	 */
 	private void handleGet(TunnelHandler handler, TunnelHandleOptions options) throws ConfigurationException {
 		Tunnel tunnel = null;
@@ -65,7 +100,6 @@ public class TunnelService extends ServiceBase {
 		TunnelAPI api = new TunnelAPI();
 		try {
 			String receiveUrl = buildReceiveUrl();
-			Logger.log("receiverUrl = " + receiveUrl);
 			tunnel = api.requestConnect(receiveUrl);
 		} catch (Exception e) {
 			writeJson(getJsonForError(e));
@@ -106,8 +140,7 @@ public class TunnelService extends ServiceBase {
 			writeJson(getJsonForError(e));
 			return;
 		}
-		Logger.log(requestContent);
-
+		
 		// 2. 读取报文内容成 JSON 并保存在 body 变量中
 		JSONObject body = null;
 		String data = null, signature = null;
@@ -122,7 +155,6 @@ public class TunnelService extends ServiceBase {
 				errJson.put("code", 9001);
 				errJson.put("message", "Cant not parse the request body: invalid json");
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			writeJson(errJson);
@@ -131,7 +163,6 @@ public class TunnelService extends ServiceBase {
 		// 3. 检查报文签名
 		String computedSignature = Hash.sha1(data + TunnelClient.getKey());
 		if (!computedSignature.equals(signature)) {
-			Logger.log("computedSignature = " + computedSignature);
 			JSONObject json = new JSONObject();
 			try {
 				json.put("code", 9003);
@@ -153,7 +184,6 @@ public class TunnelService extends ServiceBase {
 			tunnelId = packet.getString("tunnelId");
 			packetType = packet.getString("type");
 			if (packet.has("content")) {
-				Logger.log("has content");
 				packetContent = packet.getString("content");
 			}
 			
@@ -162,8 +192,6 @@ public class TunnelService extends ServiceBase {
 			response.put("message", "OK");
 			writeJson(response);
 		} catch (JSONException e) {
-			Logger.log("ex222222222222: " + e.getMessage());
-			Logger.log(e.getStackTrace().toString());
 			JSONObject response = new JSONObject();
 			try {
 				response.put("code", 9004);
@@ -175,7 +203,6 @@ public class TunnelService extends ServiceBase {
 			e.printStackTrace();
 		}
 		
-		Logger.log(String.format("PacketType = %s, TunnelId = %s", packetType, tunnelId));
 		// 5. 交给客户处理实例处理报文
 		Tunnel tunnel = Tunnel.getById(tunnelId);
 		if (packetType.equals("connect")) {
