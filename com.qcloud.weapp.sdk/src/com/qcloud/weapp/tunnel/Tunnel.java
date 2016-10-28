@@ -1,5 +1,8 @@
 package com.qcloud.weapp.tunnel;
 
+/**
+ * 表示一个信道
+ * */
 public class Tunnel {
 
 	private String tunnelId;
