@@ -1,6 +1,8 @@
 腾讯云微信小程序服务端 SDK - Java
 =================================
 
+[![license](https://img.shields.io/github/license/tencentyun/weapp-java-server-sdk.svg)](LICENSE)
+
 本 SDK 是[腾讯云微信小程序一站式解决方案][weapp-solution]（下文简称「解决方案」）的组成部分。业务服务器可通过本 SDK 为小程序客户端提供云端服务支持，包括：
 
 1. 登录态鉴权服务
