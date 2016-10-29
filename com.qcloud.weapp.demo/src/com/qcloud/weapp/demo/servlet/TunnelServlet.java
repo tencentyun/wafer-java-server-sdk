@@ -1,137 +1,40 @@
 package com.qcloud.weapp.demo.servlet;
 
 import java.io.IOException;
-import java.util.HashMap;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.qcloud.weapp.ConfigurationException;
-import com.qcloud.weapp.authorization.UserInfo;
-import com.qcloud.weapp.tunnel.EmitError;
-import com.qcloud.weapp.tunnel.EmitResult;
-import com.qcloud.weapp.tunnel.Tunnel;
 import com.qcloud.weapp.tunnel.TunnelHandleOptions;
-import com.qcloud.weapp.tunnel.TunnelHandler;
-import com.qcloud.weapp.tunnel.TunnelInvalidInfo;
-import com.qcloud.weapp.tunnel.TunnelMessage;
-import com.qcloud.weapp.tunnel.TunnelRoom;
 import com.qcloud.weapp.tunnel.TunnelService;
+import com.qcloud.weapp.demo.ChatTunnelHandler;
 
 /**
- * Servlet implementation class TunnelServlet
+ * 使用 SDK 提供信道服务
  */
 @WebServlet("/tunnel")
 public class TunnelServlet extends HttpServlet {
 	private static final long serialVersionUID = -6490955903032763981L;
 
-	private static HashMap<String, UserInfo> userMap = new HashMap<String, UserInfo>();
-	private static TunnelRoom room = new TunnelRoom();
-
 	/**
-	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * 把所有的请求交给 SDK 处理，提供 TunnelHandler 处理信道事件
 	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+        // 创建信道服务处理信道相关请求
 		TunnelService tunnelService = new TunnelService(request, response);
-		TunnelHandleOptions options = new TunnelHandleOptions();
-
-		options.setCheckLogin(true);
-
+		
 		try {
-			tunnelService.handle(new TunnelHandler() {
-
-				@Override
-				public void onTunnelRequest(Tunnel tunnel, UserInfo userInfo) {
-					if (tunnel.getTunnelId() == "test") {
-						userInfo = new UserInfo();
-					}
-					if (userInfo != null) {
-						userMap.put(tunnel.getTunnelId(), userInfo);
-					}
-					System.out.println(String.format("Tunnel Connected: %s", tunnel.getTunnelId()));
-				}
-
-				@Override
-				public void onTunnelConnect(Tunnel tunnel) {
-					if (userMap.containsKey(tunnel.getTunnelId())) {
-						room.addTunnel(tunnel);
-						JSONObject peopleMessage = new JSONObject();
-						try {
-							peopleMessage.put("total", room.getTunnelCount());
-							peopleMessage.put("enter", new JSONObject(userMap.get(tunnel.getTunnelId())));
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						broadcast("people", peopleMessage);
-					} else {
-						closeTunnel(tunnel);
-					}
-				}
-
-				@Override
-				public void onTunnelMessage(Tunnel tunnel, TunnelMessage message) {
-					if (message.getType().equals("speak") && userMap.containsKey(tunnel.getTunnelId())) {
-						JSONObject speakMessage = new JSONObject();
-						try {
-							JSONObject messageContent = (JSONObject) message.getContent();
-							speakMessage.put("word", messageContent.getString("word"));
-							speakMessage.put("who", new JSONObject(userMap.get(tunnel.getTunnelId())));
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						broadcast("speak", speakMessage);
-					} else {
-						closeTunnel(tunnel);
-					}
-
-				}
-
-				@Override
-				public void onTunnelClose(Tunnel tunnel) {
-					UserInfo leaveUser = null;
-					if (userMap.containsKey(tunnel.getTunnelId())) {
-						leaveUser = userMap.get(tunnel.getTunnelId());
-						userMap.remove(tunnel.getTunnelId());
-					}
-					room.removeTunnel(tunnel);
-					JSONObject peopleMessage = new JSONObject();
-					try {
-						peopleMessage.put("total", room.getTunnelCount());
-						peopleMessage.put("leave", new JSONObject(leaveUser));
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					broadcast("people", peopleMessage);
-				}
-
-				private void closeTunnel(Tunnel tunnel) {
-					try {
-						tunnel.close();
-					} catch (EmitError e) {
-						e.printStackTrace();
-					}
-				}
-
-				private void broadcast(String messageType, JSONObject messageContent) {
-					try {
-						EmitResult result = room.broadcast(messageType, messageContent);
-						for (TunnelInvalidInfo invalidInfo : result.getTunnelInvalidInfos()) {
-							onTunnelClose(Tunnel.getById(invalidInfo.getTunnelId()));
-						}
-					} catch (EmitError e) {
-						// 如果消息发送发生异常，这里可以进行错误处理或者重试的逻辑
-						e.printStackTrace();
-					}
-				}
-			}, options);
+			// 配置是可选的，配置 CheckLogin 为 true 的话，会在隧道建立之前获取用户信息，以便业务将隧道和用户关联起来
+			TunnelHandleOptions options = new TunnelHandleOptions();
+			options.setCheckLogin(true);
+			
+            // 需要实现信道处理器，ChatTunnelHandler 是一个实现的范例
+			tunnelService.handle(new ChatTunnelHandler(), options);
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
