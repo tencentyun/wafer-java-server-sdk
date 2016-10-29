@@ -100,7 +100,6 @@ import com.qcloud.weapp.authorization.*;
 
 @WebServlet("/user")
 public class UserServlet extends HttpServlet {
-
     /**
      * 从请求中获取会话中的用户信息
      */
@@ -148,8 +147,6 @@ import com.qcloud.weapp.demo.ChatTunnelHandler;
 
 @WebServlet("/tunnel")
 public class TunnelServlet extends HttpServlet {
-    private static final long serialVersionUID = -6490955903032763981L;
-
     /**
      * 把所有的请求交给 SDK 处理，提供 TunnelHandler 处理信道事件
      */
