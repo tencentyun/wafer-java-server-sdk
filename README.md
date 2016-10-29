@@ -187,7 +187,7 @@ public class TunnelServlet extends HttpServlet {
 [tunnel-service-wiki]: https://github.com/tencentyun/weapp-solution/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于信道服务的更多资料"
 [login-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#login-- "查看 LoginService::login() 方法 API"
 [check-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#check-- "查看 LoginService::ckeck() 方法 API"
-[tunnel-handler-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/tunnel/TunnelHandler.html "查看 TunnelHandler 接口 API 文档";
+[tunnel-handler-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/tunnel/TunnelHandler.html "查看 TunnelHandler 接口 API 文档"
 [chat-handler-source]: https://github.com/tencentyun/weapp-java-server-sdk/blob/master/com.qcloud.weapp.demo/src/com/qcloud/weapp/demo/ChatTunnelHandler.java "查看 ChatTunnelHandler 示例代码"
 
 [new-issue]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/issues/new "反馈建议和问题"
