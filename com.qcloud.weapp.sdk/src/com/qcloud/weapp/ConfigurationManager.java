@@ -58,7 +58,7 @@ public class ConfigurationManager {
 			configuration.setNetworkProxy(configs.getString("networkProxy"));
 		}
 		if (configs.has("networkTimeout")) {
-			configuration.setNetworkTimeout(configs.getInt("newtorkTimeout"));
+			configuration.setNetworkTimeout(configs.getInt("networkTimeout"));
 		}
 		ConfigurationManager.setup(configuration);
 	}
