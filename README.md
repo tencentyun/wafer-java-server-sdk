@@ -193,4 +193,4 @@ public class TunnelServlet extends HttpServlet {
 [chat-handler-source]: https://github.com/tencentyun/weapp-java-server-sdk/blob/master/com.qcloud.weapp.demo/src/com/qcloud/weapp/demo/ChatTunnelHandler.java "查看 ChatTunnelHandler 示例代码"
 
 [new-issue]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/issues/new "反馈建议和问题"
-[pr]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/pulls "创建
+[pr]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/pulls "创建 Pull Request"
