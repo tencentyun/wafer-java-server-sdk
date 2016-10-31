@@ -26,7 +26,7 @@ public class Configuration {
 	private String networkProxy;
 	
 	/** The network timeout. */
-	private Integer networkTimeout;
+	private int networkTimeout;
 	
 	/**
 	 * Gets the server host.
@@ -123,8 +123,8 @@ public class Configuration {
 	 *
 	 * @return the network timeout
 	 */
-	public Integer getNetworkTimeout() {
-		return networkTimeout == null ? 30 : networkTimeout;
+	public int getNetworkTimeout() {
+		return networkTimeout;
 	}
 	
 	/**

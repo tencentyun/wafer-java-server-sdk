@@ -66,10 +66,13 @@ public class HttpRequest {
 
 		connection = connectionProvider.getConnection(url, proxy);
 		
-		int networkTimeout = 60000;
+		int networkTimeout = 30000;
 		
 		try {
-			networkTimeout = 1000 * ConfigurationManager.getCurrentConfiguration().getNetworkTimeout();
+			networkTimeout = ConfigurationManager.getCurrentConfiguration().getNetworkTimeout();
+			if (networkTimeout == 0) {
+				networkTimeout = 30000;
+			}
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 		}
