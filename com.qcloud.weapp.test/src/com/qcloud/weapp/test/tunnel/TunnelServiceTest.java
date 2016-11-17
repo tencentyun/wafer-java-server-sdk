@@ -36,7 +36,7 @@ public class TunnelServiceTest {
 		config.setAuthServerUrl("http://127.0.0.1:10086/auth");
 		config.setTunnelServerUrl("http://127.0.0.1:10086/tunnel");
 		config.setTunnelSignatureKey("test key");
-		config.setNetworkTimeout(1);
+		config.setNetworkTimeout(1000);
 		try {
 			ConfigurationManager.setup(config);
 		} catch (ConfigurationException e) {

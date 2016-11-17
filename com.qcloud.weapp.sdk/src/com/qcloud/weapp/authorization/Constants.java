@@ -8,7 +8,8 @@ public final class Constants {
     static final String WX_HEADER_CODE = "X-WX-Code";
     static final String WX_HEADER_ID = "X-WX-Id";
     static final String WX_HEADER_SKEY = "X-WX-Skey";
-    static final String WX_HEADER_ENCRYPT_DATA = "X-WX-Encrypt-Data";
+    static final String WX_HEADER_ENCRYPTED_DATA = "X-WX-Encrypted-Data";
+    static final String WX_HEADER_IV = "X-WX-IV";
 
     /**
      * 表示登录失败

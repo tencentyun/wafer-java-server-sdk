@@ -17,10 +17,11 @@ class AuthorizationAPI {
 		return ConfigurationManager.getCurrentConfiguration().getAuthServerUrl();
 	}
 
-	public JSONObject login(String code, String encryptData) throws AuthorizationAPIException, ConfigurationException {
+	public JSONObject login(String code, String encryptedData, String iv) throws AuthorizationAPIException, ConfigurationException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("code", code);
-		params.put("encrypt_data", encryptData);
+		params.put("encrypt_data", encryptedData);
+		params.put("iv", iv);
 		return request("qcloud.cam.id_skey", params);
 	}
 	

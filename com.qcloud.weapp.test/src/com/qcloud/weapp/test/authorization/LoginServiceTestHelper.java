@@ -12,12 +12,13 @@ import static org.mockito.Mockito.*;
 
 public class LoginServiceTestHelper {
 	
-	public HttpMock createLoginHttpMock(String code, String encryptData) {
+	public HttpMock createLoginHttpMock(String code, String encryptedData, String iv) {
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		HttpServletResponse response = mock(HttpServletResponse.class);
 		
 		when(request.getHeader("X-WX-Code")).thenReturn(code);
-		when(request.getHeader("X-WX-Encrypt-Data")).thenReturn(encryptData);
+		when(request.getHeader("X-WX-Encrypted-Data")).thenReturn(encryptedData);
+		when(request.getHeader("X-WX-IV")).thenReturn(iv);
 		
 		HttpMock mock = new HttpMock();
 		mock.request = request;

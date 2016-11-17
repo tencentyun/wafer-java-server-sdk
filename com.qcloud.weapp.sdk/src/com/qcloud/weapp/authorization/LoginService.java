@@ -71,13 +71,14 @@ public class LoginService {
 	 * */
 	public UserInfo login() throws IllegalArgumentException, LoginServiceException, ConfigurationException {
 		String code = getHeader(Constants.WX_HEADER_CODE);
-		String encryptData = getHeader(Constants.WX_HEADER_ENCRYPT_DATA);
+		String encryptedData = getHeader(Constants.WX_HEADER_ENCRYPTED_DATA);
+		String iv = getHeader(Constants.WX_HEADER_IV);
 		
 		AuthorizationAPI api = new AuthorizationAPI();
 		JSONObject loginResult;
 		
 		try {
-			loginResult = api.login(code, encryptData);
+			loginResult = api.login(code, encryptedData, iv);
 		} catch (AuthorizationAPIException apiError) {
 			LoginServiceException error = new LoginServiceException(Constants.ERR_LOGIN_FAILED, apiError.getMessage(), apiError);
 			writeJson(getJsonForError(error));

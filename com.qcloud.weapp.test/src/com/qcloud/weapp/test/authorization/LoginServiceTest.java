@@ -27,7 +27,7 @@ public class LoginServiceTest {
 		config.setAuthServerUrl("http://127.0.0.1:10086/auth");
 		config.setTunnelServerUrl("http://127.0.0.1:10086/tunnel");
 		config.setTunnelSignatureKey("test key");
-		config.setNetworkTimeout(1);
+		config.setNetworkTimeout(1000);
 		try {
 			ConfigurationManager.setup(config);
 		} catch (ConfigurationException e) {
@@ -37,7 +37,7 @@ public class LoginServiceTest {
 
 	@Test
 	public void testLoginProcess() {
-		HttpMock mock = helper.createLoginHttpMock("valid-code", "valid-data");
+		HttpMock mock = helper.createLoginHttpMock("valid-code", "valid-data", "valid-iv");
 		LoginService service = new LoginService(mock.request, mock.response);
 		
 		try {
@@ -59,33 +59,35 @@ public class LoginServiceTest {
 
 	@Test
 	public void testLoginProcessWithoutCodeOrData() {
-		testLoginProcessExpectError(null, "valid-data");
-		testLoginProcessExpectError("valid-code", null);
+		testLoginProcessExpectError(null, "valid-data", "valid-iv");
+		testLoginProcessExpectError("valid-code", null, "valid-iv");
+		testLoginProcessExpectError("valid-code", "valid-data", null);
 	}
 	
 	@Test
 	public void testLoginProcessWithInvalidCodeOrData() {
-		testLoginProcessExpectError("invalid-code", "valid-data");
-		testLoginProcessExpectError("valid-code", "invalid-data");
+		testLoginProcessExpectError("invalid-code", "valid-data", "valid-iv");
+		testLoginProcessExpectError("valid-code", "invalid-data", "valid-iv");
+		testLoginProcessExpectError("valid-code", "valid-data", "invalid-iv");
 	}
 	
 	@Test
 	public void testLoginProcessWithServerResponseError() {
-		testLoginProcessExpectError("expect-valid-json", "valid-data");
+		testLoginProcessExpectError("expect-valid-json", "valid-data", "valid-iv");
 	}
 	
 	@Test
 	public void testLoginProcessWithServer500() {
-		testLoginProcessExpectError("expect-500", "valid-data");
+		testLoginProcessExpectError("expect-500", "valid-data", "valid-iv");
 	}
 	
 	@Test
 	public void testLoginProcessWithServerTimeout() {
-		testLoginProcessExpectError("expect-timeout", "valid-data");
+		testLoginProcessExpectError("expect-timeout", "valid-data", "valid-iv");
 	}
 	
-	private LoginServiceException testLoginProcessExpectError(String code, String encryptData) {
-		HttpMock mock = helper.createLoginHttpMock(code, encryptData);
+	private LoginServiceException testLoginProcessExpectError(String code, String encrypteData, String iv) {
+		HttpMock mock = helper.createLoginHttpMock(code, encrypteData, iv);
 		LoginService service = new LoginService(mock.request, mock.response);
 		
 		LoginServiceException errorShouldThrow = null;
