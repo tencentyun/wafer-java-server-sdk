@@ -3,7 +3,7 @@ Wafer 服务端 SDK - Java
 
 [![license](https://img.shields.io/github/license/tencentyun/weapp-java-server-sdk.svg?style=flat-square)](LICENSE)
 
-本 SDK 是 [Wafer][wafer]（下文简称「解决方案」）的组成部分。业务服务器可通过本 SDK 为小程序客户端提供云端服务支持，包括：
+本项目是 [Wafer](https://github.com/tencentyun/wafer) 组成部分，以 SDK 的形式为业务服务器提供以下服务：
 
 + [会话服务](https://github.com/tencentyun/wafer/wiki/会话服务)
 + [信道服务](https://github.com/tencentyun/wafer/wiki/信道服务)
