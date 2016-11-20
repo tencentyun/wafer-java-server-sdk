@@ -193,3 +193,7 @@ public class TunnelServlet extends HttpServlet {
 
 [new-issue]: https://github.com/CFETeam/wafer-server-sdk-csharp/issues/new "反馈建议和问题"
 [pr]: https://github.com/CFETeam/wafer-server-sdk-csharp/pulls "创建 Pull Request"
+
+## LICENSE
+
+[MIT](LICENSE)
