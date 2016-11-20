@@ -134,9 +134,9 @@ public class UserServlet extends HttpServlet {
 
 ```
 
-> 如果检查会话失败，或者会话无效，[Check()][check-api] 方法会抛出异常，需要使用 try-catch 来捕获异常。该异常可以不用处理，抛出来是为了方便业务服务器可以进行记录和监控。
+> 如果检查会话失败，或者会话无效，[check()][check-api] 方法会抛出异常，需要使用 try-catch 来捕获异常。该异常可以不用处理，抛出来是为了方便业务服务器可以进行记录和监控。
 
-阅读解决方案文档中的[鉴权服务][auth-service-wiki]了解更多解决方案中关于鉴权服务的技术资料。
+阅读解决方案文档中的[会话服务][session-service-wiki]了解更多解决方案中关于鉴权服务的技术资料。
 
 ### 使用 SDK 提供信道服务
 
@@ -184,8 +184,8 @@ public class TunnelServlet extends HttpServlet {
 [sdk-download]: https://github.com/tencentyun/wafer-java-server-sdk/archive/master.zip "下载 Java SDK 源码"
 [api-url]: https://tencentyun.github.io/wafer-java-server-sdk/api/ "查看 Java SDK API 文档"
 [sdk-config-wiki]: https://github.com/tencentyun/wafer/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE "查看服务端 SDK 配置"
-[auth-service-wiki]: https://github.com/tencentyun/wafer/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于会话服务的更多资料"
-[tunnel-service-wiki]: https://github.com/tencentyun/wafer/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于信道服务的更多资料"
+[session-service-wiki]: https://github.com/tencentyun/wafer/wiki/会话服务 "查看关于会话服务的更多资料"
+[tunnel-service-wiki]: https://github.com/tencentyun/wafer/wiki/信道服务 "查看关于信道服务的更多资料"
 [login-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#login-- "查看 LoginService::login() 方法 API"
 [check-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#check-- "查看 LoginService::ckeck() 方法 API"
 [tunnel-handler-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/tunnel/TunnelHandler.html "查看 TunnelHandler 接口 API 文档"
