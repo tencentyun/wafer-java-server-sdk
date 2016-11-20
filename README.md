@@ -1,18 +1,18 @@
-腾讯云微信小程序服务端 SDK - Java
+Wafer 服务端 SDK - Java
 =================================
 
 [![license](https://img.shields.io/github/license/tencentyun/weapp-java-server-sdk.svg?style=flat-square)](LICENSE)
 
-本 SDK 是[腾讯云微信小程序一站式解决方案][weapp-solution]（下文简称「解决方案」）的组成部分。业务服务器可通过本 SDK 为小程序客户端提供云端服务支持，包括：
+本 SDK 是 [Wafer][wafer]（下文简称「解决方案」）的组成部分。业务服务器可通过本 SDK 为小程序客户端提供云端服务支持，包括：
 
-1. 登录态鉴权服务
-2. 信道服务
++ [会话服务](https://github.com/tencentyun/wafer/wiki/会话服务)
++ [信道服务](https://github.com/tencentyun/wafer/wiki/信道服务)
 
 ## SDK 获取
 
 本项目遵守 [MIT](LICENSE) 协议，可以直接[下载 SDK 源码][sdk-download]进行修改、编译和发布。
 
-> 如果从[腾讯云微信小程序控制台][la-console]购买解决方案并选择 Java 语言，则分配的业务服务器里已经部署了本 SDK 和 Demo 的发行版本。
+> 如果使用[自动部署](https://github.com/tencentyun/wafer/wiki/%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2)并选择 Java 语言，则分配的业务服务器里已经部署了本 SDK 和 Demo 的发行版本。
 
 ## API
 
@@ -180,17 +180,16 @@ public class TunnelServlet extends HttpServlet {
 
 如有问题，欢迎使用 [Issues][new-issue] 提出，也欢迎广大开发者给我们提 [Pull Request][pr]。
 
-[weapp-solution]: https://github.com/tencentyun/weapp-solution "查看腾讯云微信小程序解决方案"
-[sdk-download]: https://github.com/tencentyun/weapp-java-server-sdk/archive/master.zip "下载 Java SDK 源码"
-[la-console]: https://console.qcloud.com/la "打开腾讯云微信小程序一站式解决方案控制台"
-[api-url]: https://tencentyun.github.io/weapp-java-server-sdk/api/ "查看 Java SDK API 文档"
-[sdk-config-wiki]: https://github.com/tencentyun/weapp-solution/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE "查看服务端 SDK 配置"
-[auth-service-wiki]: https://github.com/tencentyun/weapp-solution/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于鉴权服务的更多资料"
-[tunnel-service-wiki]: https://github.com/tencentyun/weapp-solution/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于信道服务的更多资料"
-[login-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#login-- "查看 LoginService::login() 方法 API"
-[check-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#check-- "查看 LoginService::ckeck() 方法 API"
-[tunnel-handler-api]: https://tencentyun.github.io/weapp-java-server-sdk/api/com/qcloud/weapp/tunnel/TunnelHandler.html "查看 TunnelHandler 接口 API 文档"
-[chat-handler-source]: https://github.com/tencentyun/weapp-java-server-sdk/blob/master/com.qcloud.weapp.demo/src/com/qcloud/weapp/demo/ChatTunnelHandler.java "查看 ChatTunnelHandler 示例代码"
+[wafer]: https://github.com/tencentyun/wafer "查看 Wafer 根项目"
+[sdk-download]: https://github.com/tencentyun/wafer-java-server-sdk/archive/master.zip "下载 Java SDK 源码"
+[api-url]: https://tencentyun.github.io/wafer-java-server-sdk/api/ "查看 Java SDK API 文档"
+[sdk-config-wiki]: https://github.com/tencentyun/wafer/wiki/%E6%9C%8D%E5%8A%A1%E7%AB%AF-SDK-%E9%85%8D%E7%BD%AE "查看服务端 SDK 配置"
+[auth-service-wiki]: https://github.com/tencentyun/wafer/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于会话服务的更多资料"
+[tunnel-service-wiki]: https://github.com/tencentyun/wafer/wiki/%E9%89%B4%E6%9D%83%E6%9C%8D%E5%8A%A1 "查看关于信道服务的更多资料"
+[login-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#login-- "查看 LoginService::login() 方法 API"
+[check-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/authorization/LoginService.html#check-- "查看 LoginService::ckeck() 方法 API"
+[tunnel-handler-api]: https://tencentyun.github.io/wafer-java-server-sdk/api/com/qcloud/weapp/tunnel/TunnelHandler.html "查看 TunnelHandler 接口 API 文档"
+[chat-handler-source]: https://github.com/tencentyun/wafer-java-server-sdk/blob/master/com.qcloud.weapp.demo/src/com/qcloud/weapp/demo/ChatTunnelHandler.java "查看 ChatTunnelHandler 示例代码"
 
-[new-issue]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/issues/new "反馈建议和问题"
-[pr]: https://github.com/CFETeam/qcloud-weapp-server-sdk-csharp/pulls "创建 Pull Request"
+[new-issue]: https://github.com/CFETeam/wafer-server-sdk-csharp/issues/new "反馈建议和问题"
+[pr]: https://github.com/CFETeam/wafer-server-sdk-csharp/pulls "创建 Pull Request"
