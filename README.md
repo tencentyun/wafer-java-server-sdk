@@ -176,6 +176,17 @@ public class TunnelServlet extends HttpServlet {
 
 阅读解决方案文档中的[信道服务][tunnel-service-wiki]了解更多解决方案中关于鉴权服务的技术资料。
 
+
+## 在DEMO基础上进行开发
+将编译好的文件放到  /var/lib/tomcat/webapps/ 目录下
+
+tomcat代码配置    /etc/tomcat
+
+重启tomcat服务    service tomcat restart
+
+
+
+
 ## 反馈和贡献
 
 如有问题，欢迎使用 [Issues][new-issue] 提出，也欢迎广大开发者给我们提 [Pull Request][pr]。
